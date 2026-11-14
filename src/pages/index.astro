@@ -1,6 +1,8 @@
 ---
 import { getCollection } from "astro:content";
 import { getRelativeLocaleUrl } from "astro:i18n";
+import { Image } from "astro:assets";
+import johnAvatar from "@/assets/images/john-avatar.jpg";
 import IconRss from "@/assets/icons/IconRss.svg";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import Layout from "@/layouts/Layout.astro";
@@ -34,23 +36,34 @@ const homePath = getRelativeLocaleUrl(locale, "");
     class="app-layout my-1"
   >
     <section id="hero" class="border-border border-b pt-8 pb-6">
-      <h1 class="my-4 inline-block text-4xl font-bold sm:my-8 sm:text-5xl">
-        Hi, I&apos;m John.
-      </h1>{" "}
-      <a
-        target="_blank"
-        href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-        class="inline-block"
-        aria-label="RSS Feed"
-        title="RSS Feed"
-      >
-        <IconRss
-          width={20}
-          height={20}
-          class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
+      <div class="my-4 flex items-center gap-4 sm:my-6">
+        <Image
+          src={johnAvatar}
+          alt="John"
+          width={80}
+          height={80}
+          class="border-accent/40 h-16 w-16 shrink-0 rounded-full border-2 object-cover shadow-sm sm:h-20 sm:w-20"
         />
-        <span class="sr-only">RSS Feed</span>
-      </a>
+        <div class="flex items-center gap-2">
+          <h1 class="inline-block text-4xl font-bold sm:text-5xl">
+            Hi, I&apos;m John.
+          </h1>
+          <a
+            target="_blank"
+            href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+            class="inline-block"
+            aria-label="RSS Feed"
+            title="RSS Feed"
+          >
+            <IconRss
+              width={20}
+              height={20}
+              class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
+            />
+            <span class="sr-only">RSS Feed</span>
+          </a>
+        </div>
+      </div>
 
       <p>
         Backend &amp; Infrastructure Architect with 6+ years of hands-on experience
