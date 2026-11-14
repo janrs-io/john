@@ -1,37 +1,21 @@
 ---
 title: "About"
-description: "A bit about me and this blog."
+description: "Backend & Infrastructure Architect — Go, Kubernetes, Linux, and Full-Stack Systems."
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+Hi, I'm **John** — a backend and infrastructure engineer with 6+ years of hands-on experience building reliable distributed systems, self-hosted cloud infrastructure, and modern web applications.
 
-![Astro Paper](@/assets/images/astropaper-og.jpg)
+## Core Expertise
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+- **Backend & Distributed Systems**: Go, gRPC, Istio, microservices architecture, high-concurrency locking & caching, PostgreSQL.
+- **Infrastructure & Cloud Native**: Bare-metal binary Kubernetes HA deployments, Linux internals (`epoll`, networking, kernel tuning), Docker, Coolify, self-hosted CI/CD.
+- **Full-Stack & Edge**: Next.js, Astro, Tailwind CSS, Cloudflare Pages / Workers / D1 / R2.
+- **Real-World Operations**: Bridging software architecture with practical B2B business workflows, ERP/CRM integrations, and global static/edge performance.
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+## What I Write About
 
-## Features
+This site (`john.janrs.com`) is where I document practical engineering guides, production debugging notes, and architecture deep dives — including my bare-metal Kubernetes HA series and Linux I/O notes.
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+## Connect
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
-
-and so much more.
-
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+- **GitHub**: [github.com/janrs-io](https://github.com/janrs-io)

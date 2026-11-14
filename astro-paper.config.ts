@@ -2,19 +2,20 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
-    title: "AstroPaper",
-    description: "A minimal, responsive and SEO-friendly Astro blog theme.",
-    author: "Sat Naing",
-    profile: "https://satna.ing",
+    url: "https://john.janrs.com/",
+    title: "John",
+    description:
+      "Backend & Infrastructure Architect — Notes on Go, Kubernetes, Linux, Docker, and Full-Stack Engineering.",
+    author: "John",
+    profile: "https://john.janrs.com/about",
     ogImage: "default-og.jpg",
     lang: "en",
-    timezone: "Asia/Bangkok",
+    timezone: "Asia/Shanghai",
     dir: "ltr",
   },
   posts: {
-    perPage: 4,
-    perIndex: 4,
+    perPage: 6,
+    perIndex: 6,
   },
   features: {
     lightAndDarkMode: true,
@@ -22,17 +23,14 @@ export default defineAstroPaperConfig({
     showArchives: true,
     showBackButton: true,
     editPost: {
-      enabled: true,
-      url: "https://github.com/satnaing/astro-paper/edit/main/",
+      enabled: false,
+      url: "https://github.com/janrs-io/john/edit/master/",
     },
     search: "pagefind",
     toc: true,
   },
   socials: [
-    { name: "github",   url: "https://github.com/satnaing/astro-paper" },
-    { name: "x",        url: "https://x.com/username" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
-    { name: "mail",     url: "mailto:yourmail@gmail.com" },
+    { name: "github", url: "https://github.com/janrs-io" },
   ],
   shareLinks: [
     { name: "whatsapp", url: "https://wa.me/?text=" },
