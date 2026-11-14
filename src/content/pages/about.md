@@ -3,7 +3,7 @@ title: "About"
 description: "Backend & Infrastructure Architect — Go, Kubernetes, Linux, and Full-Stack Systems."
 ---
 
-![John](@/assets/images/john-avatar.jpg)
+![John](@/assets/images/john-about.jpg)
 
 Hi, I'm **John** — a backend and infrastructure engineer with 6+ years of hands-on experience building reliable distributed systems, self-hosted cloud infrastructure, and modern web applications.
 
