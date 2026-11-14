@@ -23,15 +23,15 @@
 }
 
 @utility max-w-app {
-  @apply max-w-3xl;
+  @apply max-w-5xl;
 }
 
 @utility app-layout {
-  @apply max-w-app mx-auto w-full px-4;
+  @apply max-w-app mx-auto w-full px-6 sm:px-8;
 }
 
 @utility active-nav {
-  @apply underline decoration-wavy decoration-2 underline-offset-8;
+  @apply text-accent font-semibold underline decoration-2 underline-offset-8;
 }
 
 :target {

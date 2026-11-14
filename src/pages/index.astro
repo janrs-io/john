@@ -35,62 +35,105 @@ const homePath = getRelativeLocaleUrl(locale, "");
     data-home-path={homePath}
     class="app-layout my-1"
   >
-    <section id="hero" class="border-border border-b pt-8 pb-6">
-      <div class="my-4 flex items-center gap-4 sm:my-6">
-        <Image
-          src={johnAvatar}
-          alt="John"
-          width={80}
-          height={80}
-          class="border-accent/40 h-16 w-16 shrink-0 rounded-full border-2 object-cover shadow-sm sm:h-20 sm:w-20"
-        />
-        <div class="flex items-center gap-2">
-          <h1 class="inline-block text-4xl font-bold sm:text-5xl">
-            Hi, I&apos;m John.
-          </h1>
-          <a
-            target="_blank"
-            href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
-            class="inline-block"
-            aria-label="RSS Feed"
-            title="RSS Feed"
-          >
-            <IconRss
-              width={20}
-              height={20}
-              class="stroke-accent scale-125 stroke-3 rtl:-rotate-90"
-            />
-            <span class="sr-only">RSS Feed</span>
-          </a>
+    <section id="hero" class="border-border border-b pt-10 pb-10">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-5">
+          <Image
+            src={johnAvatar}
+            alt="John"
+            width={96}
+            height={96}
+            class="border-border h-20 w-20 shrink-0 rounded-2xl border object-cover shadow-md sm:h-24 sm:w-24"
+          />
+          <div>
+            <p class="text-accent mb-1 text-xs font-semibold tracking-widest uppercase">
+              Backend &amp; Infrastructure Architect
+            </p>
+            <div class="flex items-center gap-2.5">
+              <h1 class="text-3xl font-bold tracking-tight sm:text-5xl">
+                Hi, I&apos;m John.
+              </h1>
+              <a
+                target="_blank"
+                href={`${import.meta.env.BASE_URL.replace(/\/?$/, "/")}rss.xml`}
+                class="inline-block opacity-80 transition hover:opacity-100"
+                aria-label="RSS Feed"
+                title="RSS Feed"
+              >
+                <IconRss
+                  width={20}
+                  height={20}
+                  class="stroke-accent stroke-2.5 rtl:-rotate-90"
+                />
+                <span class="sr-only">RSS Feed</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
 
-      <p>
-        Backend &amp; Infrastructure Architect with 6+ years of hands-on experience
-        in Go, bare-metal Kubernetes HA, Linux internals, Docker/Coolify, and
-        modern full-stack delivery (Next.js, Astro, PostgreSQL, Cloudflare
-        Workers/R2).
+      <p class="text-foreground/90 mt-6 max-w-3xl text-base leading-relaxed sm:text-lg">
+        6+ years of hands-on experience designing distributed Go services,
+        bare-metal Kubernetes HA clusters, Linux performance tuning, and modern
+        full-stack systems (Next.js, Astro, PostgreSQL, Cloudflare Edge).
       </p>
-      <p class="mt-2">
-        Read my technical notes below or check{" "}
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
         <LinkButton
-          class="hover:text-accent underline decoration-dashed underline-offset-4"
-          href="/about/"
+          href="/posts/"
+          class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition hover:opacity-90"
         >
-          About Me
-        </LinkButton>{" "}
-        for background and consulting inquiries.
-      </p>
+          Read Technical Notes
+          <IconArrowRight class="inline-block h-4 w-4" />
+        </LinkButton>
+        <LinkButton
+          href="/about/"
+          class="border-border bg-muted/60 hover:border-accent/50 inline-flex items-center rounded-lg border px-5 py-2.5 text-sm font-medium transition"
+        >
+          About &amp; Experience
+        </LinkButton>
+      </div>
+
       {
         socials.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">
-              {t.home.socialLinks}:
-            </div>
+          <div class="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+            <span class="whitespace-nowrap">{t.home.socialLinks}:</span>
             <Socials />
           </div>
         )
       }
+    </section>
+
+    <section id="expertise" class="border-border border-b py-10">
+      <div class="mb-6 flex items-baseline justify-between">
+        <h2 class="text-2xl font-bold tracking-tight">Core Capabilities</h2>
+        <span class="text-muted-foreground text-xs tracking-wider uppercase">
+          Engineering Stack
+        </span>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="border-border bg-muted/40 rounded-xl border p-5 transition hover:border-accent/40">
+          <h3 class="text-base font-semibold">Backend &amp; Distributed</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+            Go, gRPC, Istio, high-concurrency locking &amp; caching,
+            PostgreSQL, and resilient API architecture.
+          </p>
+        </div>
+        <div class="border-border bg-muted/40 rounded-xl border p-5 transition hover:border-accent/40">
+          <h3 class="text-base font-semibold">Cloud Native &amp; Linux</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+            Bare-metal binary Kubernetes HA clusters, Linux internals
+            (epoll/networking), Docker, and Coolify self-hosting.
+          </p>
+        </div>
+        <div class="border-border bg-muted/40 rounded-xl border p-5 transition hover:border-accent/40">
+          <h3 class="text-base font-semibold">Full-Stack &amp; Edge</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+            Next.js, Astro, Tailwind CSS, Cloudflare Pages / Workers / D1 / R2,
+            and global B2B system integration.
+          </p>
+        </div>
+      </div>
     </section>
 
     {
