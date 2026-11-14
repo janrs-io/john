@@ -1,0 +1,170 @@
+---
+import { Image } from "astro:assets";
+import johnAbout from "@/assets/images/john-about.jpg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+const capabilities = [
+  {
+    title: "后端与高并发架构",
+    tags: ["Go", "Gin", "gRPC", "pgx/v5", "sqlc", "PostgreSQL"],
+    points: [
+      "基于 Go 与 Node.js/TypeScript 构建生产级高并发后端服务，涵盖流式大文件解析与类型安全 SQL 数据层。",
+      "高并发一致性工程实践：乐观锁防覆盖、原子发号锁、CAS 状态抢占、Single-Flight 请求合并与写后即读缓存一致性。",
+      "动态 RBAC、行级数据所有权隔离、边缘 Webhook HMAC-SHA256 验签，以及嵌入式前端单二进制私有化交付。",
+    ],
+  },
+  {
+    title: "云原生、Kubernetes 与自托管基础设施",
+    tags: ["Kubernetes HA", "Istio", "Docker Compose", "Coolify", "pgvector", "Linux / epoll"],
+    points: [
+      "裸金属二进制部署 Kubernetes 高可用集群全栈实战（Control Plane HA、etcd、Calico、CoreDNS、TLS Bootstrap 与 Istio 服务网格）。",
+      "基于 Coolify 与 Docker Compose 的多栈生产级自托管架构：跨栈内网隔离（数据库/Redis 零宿主机端口暴露）、PostgreSQL 17 + pgvector、MariaDB 与 Cloudflare R2 自动异地备份。",
+      "深厚的 Linux 系统功底：深入理解 epoll / I/O 多路复用、TCP 网络调优，以及结合 Uptime Kuma 与 Umami 的可观测性运维。",
+    ],
+  },
+  {
+    title: "现代全栈与边缘计算平台",
+    tags: ["Next.js", "React", "Astro", "TypeScript", "Tailwind CSS", "Cloudflare"],
+    points: [
+      "使用 Next.js（App Router）、React、Astro 与 Drizzle ORM 构建现代全栈 Web 平台，并配套自动化并发与 E2E 测试。",
+      "基于 Cloudflare Pages、Workers、D1 与 R2 对象存储/CDN 构建全球低延迟边缘原生应用。",
+      "多语言 i18n 路由体系、RTL 排版适配、技术 SEO 与面向 AI 搜索的 GEO / llms.txt 规范落地。",
+    ],
+  },
+  {
+    title: "企业级系统集成与 AI 自动化",
+    tags: ["ERP / CRM", "Dify", "n8n", "Gotenberg", "Webhooks", "R2 CDN"],
+    points: [
+      "跨 ERP/CRM 与开源企业套件（ERPNext、Chatwoot、Directus、Outline、Kutt）的端到端事务级集成、幂等 API 设计与多表级联同步。",
+      "基于 Dify、n8n、pgvector 搭建私有化 AI 应用与自动化工作流，并具备开源容器镜像源码级 Patch 与定制构建能力。",
+      "全渠道消息与 IMAP 邮件接入、Gotenberg 无头 PDF 渲染及高精度本地 OCR 文档结构化提取流水线。",
+    ],
+  },
+];
+
+const zhAboutDesc =
+  "杨建勇 — 10+ 年资深软件工程师与系统架构师，专注 Go 高并发、Kubernetes 高可用集群、Linux 系统与现代全栈/边缘架构。";
+
+const zhProfileStructuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  inLanguage: "zh-CN",
+  mainEntity: {
+    "@type": "Person",
+    name: "杨建勇 (John Yang)",
+    url: `${config.site.url}zh/about/`,
+    jobTitle: "高级软件工程师 · 系统架构师",
+    description: zhAboutDesc,
+    sameAs: config.socials.map(s => s.url),
+  },
+}).replace(/</g, "\\u003c");
+---
+
+<Layout
+  title="关于我 | 杨建勇"
+  description={zhAboutDesc}
+>
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={zhProfileStructuredData}
+    />
+  </Fragment>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle="关于我">
+    <section class="border-border mt-4 grid gap-10 border-b pb-10 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+      <div class="space-y-5">
+        <p class="text-accent text-xs font-semibold tracking-widest uppercase">
+          10+ 年工程经验 · 高级软件工程师 &amp; 系统架构师
+        </p>
+
+        <p class="text-foreground/95 text-base leading-relaxed sm:text-lg">
+          你好，我是<strong>杨建勇</strong>。过去十余年里，我长期在一线设计、开发并运维生产级软件系统——涵盖底层
+          Linux 内核网络与裸金属 Kubernetes 高可用集群，到高并发 Go 后端服务以及面向全球的现代全栈与边缘 Web 平台。
+        </p>
+
+        <p class="text-muted-foreground text-base leading-relaxed">
+          我推崇务实、可靠、不过度设计的工程架构——注重清晰的领域建模、严格的并发安全与权限隔离，以及高效可维护的全栈交付。
+        </p>
+
+        <div class="grid grid-cols-3 gap-3 pt-2">
+          <div class="border-border bg-muted/50 rounded-xl border p-3.5">
+            <div class="text-accent text-xl font-bold sm:text-2xl">10+</div>
+            <div class="text-muted-foreground mt-0.5 text-xs">年工程经验</div>
+          </div>
+          <div class="border-border bg-muted/50 rounded-xl border p-3.5">
+            <div class="text-accent text-xl font-bold sm:text-2xl">Go &amp; K8s</div>
+            <div class="text-muted-foreground mt-0.5 text-xs">核心后端与底座</div>
+          </div>
+          <div class="border-border bg-muted/50 rounded-xl border p-3.5">
+            <div class="text-accent text-xl font-bold sm:text-2xl">Full-Stack</div>
+            <div class="text-muted-foreground mt-0.5 text-xs">Next.js / Astro / Edge</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto w-full max-w-sm lg:max-w-none">
+        <div class="border-border bg-muted/30 overflow-hidden rounded-2xl border p-2 shadow-sm">
+          <Image
+            src={johnAbout}
+            alt="John Yang"
+            width={640}
+            height={853}
+            class="aspect-[3/4] w-full rounded-xl object-cover object-top"
+          />
+        </div>
+      </div>
+    </section>
+
+    <section class="py-10">
+      <div class="mb-6 flex items-baseline justify-between">
+        <h2 class="text-2xl font-bold tracking-tight">核心工程能力矩阵</h2>
+        <span class="text-muted-foreground text-xs tracking-wider uppercase">
+          Technical Capabilities
+        </span>
+      </div>
+
+      <div class="grid gap-5 md:grid-cols-2">
+        {capabilities.map(cap => (
+          <div class="border-border bg-muted/30 flex flex-col justify-between rounded-2xl border p-6 transition hover:border-accent/40">
+            <div>
+              <h3 class="text-lg font-semibold tracking-tight">{cap.title}</h3>
+              <ul class="text-foreground/85 mt-3 space-y-2 text-sm leading-relaxed">
+                {cap.points.map(point => (
+                  <li class="flex gap-2">
+                    <span class="text-accent mt-1 shrink-0 text-xs">●</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div class="mt-5 flex flex-wrap gap-1.5 pt-3 border-t border-border/60">
+              {cap.tags.map(tag => (
+                <span class="bg-background border-border text-muted-foreground rounded-md border px-2 py-0.5 text-xs font-medium">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="border-border bg-muted/40 rounded-2xl border p-6 sm:p-8">
+      <h2 class="text-xl font-bold tracking-tight">交流与合作</h2>
+      <p class="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed sm:text-base">
+        欢迎围绕 Go 高并发系统、Kubernetes / Istio 架构、现代全栈与边缘平台工程进行技术交流。你可以通过主页或顶部导航的 GitHub 链接找到我，也可以在文章归档中查阅我的过往技术笔记。
+      </p>
+    </section>
+  </Main>
+  <Footer />
+</Layout>

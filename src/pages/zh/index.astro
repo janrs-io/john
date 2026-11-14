@@ -1,0 +1,209 @@
+---
+import { getCollection } from "astro:content";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { Image } from "astro:assets";
+import johnAvatar from "@/assets/images/john-avatar.jpg";
+import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Socials from "@/components/Socials.astro";
+import Card from "@/components/Card.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { getSortedPosts } from "@/utils/getSortedPosts";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+const { socials, posts: postsConfig } = config;
+
+const locale = Astro.currentLocale ?? "zh";
+const t = useTranslations(locale);
+
+const posts = await getCollection("posts");
+const sortedPosts = getSortedPosts(posts, "zh");
+const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const homePath = getRelativeLocaleUrl(locale, "");
+const zhDescription =
+  "10+ 年软件工程与系统架构经验——专注于高并发 Go 后端服务、裸金属 Kubernetes 高可用集群、Linux 底层网络与现代全栈边缘平台。";
+
+const zhHomeStructuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${config.site.url}zh/#website`,
+      url: `${config.site.url}zh/`,
+      name: "杨建勇 (John Yang)",
+      description: zhDescription,
+      inLanguage: "zh-CN",
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${config.site.url}zh/search/?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "Person",
+      "@id": `${config.site.url}#person`,
+      name: "杨建勇 (John Yang)",
+      url: `${config.site.url}zh/about/`,
+      jobTitle: "高级软件工程师 · 系统架构师",
+      sameAs: config.socials.map(s => s.url),
+    },
+  ],
+}).replace(/</g, "\\u003c");
+---
+
+<Layout title="杨建勇 | 高级软件工程师与系统架构师" description={zhDescription}>
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={zhHomeStructuredData}
+    />
+  </Fragment>
+  <Header />
+  <main
+    id="main-content"
+    data-layout="index"
+    data-home-path={homePath}
+    class="app-layout my-1"
+  >
+    <section id="hero" class="border-border border-b pt-10 pb-10">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex items-center gap-5">
+          <Image
+            src={johnAvatar}
+            alt="杨建勇"
+            width={96}
+            height={96}
+            class="border-border h-20 w-20 shrink-0 rounded-2xl border object-cover shadow-md sm:h-24 sm:w-24"
+          />
+          <div>
+            <p class="text-accent mb-1 text-xs font-semibold tracking-widest uppercase">
+              高级软件工程师 · 系统架构师
+            </p>
+            <h1 class="text-3xl font-bold tracking-tight sm:text-5xl">
+              你好，我是杨建勇
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-foreground/90 mt-6 max-w-3xl text-base leading-relaxed sm:text-lg">
+        10+ 年软件工程与系统架构经验——专注于高并发 Go 后端服务、裸金属 Kubernetes
+        高可用集群、Linux 底层网络与系统调优，以及现代全栈与边缘计算平台（Next.js、React、Astro、PostgreSQL、Cloudflare）。
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center gap-3">
+        <a
+          href={getRelativeLocaleUrl("zh", "posts")}
+          class="bg-accent text-accent-foreground inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium shadow-sm transition hover:opacity-90"
+        >
+          阅读技术笔记
+          <IconArrowRight class="inline-block h-4 w-4" />
+        </a>
+        <LinkButton
+          href={getRelativeLocaleUrl("zh", "about")}
+          class="border-border bg-muted/60 hover:border-accent/50 inline-flex items-center rounded-lg border px-5 py-2.5 text-sm font-medium transition"
+        >
+          关于我与工程经历
+        </LinkButton>
+      </div>
+
+      {
+        socials.length > 0 && (
+          <div class="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
+            <span class="whitespace-nowrap">{t.home.socialLinks}：</span>
+            <Socials />
+          </div>
+        )
+      }
+    </section>
+
+    <section id="expertise" class="border-border border-b py-10">
+      <div class="mb-6 flex items-baseline justify-between">
+        <h2 class="text-2xl font-bold tracking-tight">核心工程能力</h2>
+        <span class="text-muted-foreground text-xs tracking-wider uppercase">
+          Engineering Stack
+        </span>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div class="border-border bg-muted/40 rounded-xl border p-5 transition hover:border-accent/40">
+          <h3 class="text-base font-semibold">后端与高并发架构</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+            Go（Gin、gRPC、pgx、sqlc）、PostgreSQL、动态 RBAC 与行级权限隔离、乐观锁/原子锁、Single-Flight 请求合并与单二进制交付。
+          </p>
+        </div>
+        <div class="border-border bg-muted/40 rounded-xl border p-5 transition hover:border-accent/40">
+          <h3 class="text-base font-semibold">云原生与 Linux 基础设施</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+            裸金属二进制部署 Kubernetes 高可用集群、Istio 服务网格、Linux 内核与 epoll 网络调优、Docker 及自托管运维体系。
+          </p>
+        </div>
+        <div class="border-border bg-muted/40 rounded-xl border p-5 transition hover:border-accent/40">
+          <h3 class="text-base font-semibold">现代全栈与边缘系统</h3>
+          <p class="text-muted-foreground mt-2 text-sm leading-relaxed">
+            Next.js、React、TypeScript、Astro、Tailwind CSS、Cloudflare Pages / Workers / D1 / R2、多语言 i18n/SEO 与企业级系统集成。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    {
+      featuredPosts.length > 0 && (
+        <section
+          id="featured"
+          class:list={[
+            "pt-12 pb-6",
+            { "border-border border-b": recentPosts.length > 0 },
+          ]}
+        >
+          <h2 class="text-2xl font-semibold tracking-wide">
+            {t.home.featured}
+          </h2>
+          <ul>
+            {featuredPosts.map(data => (
+              <Card variant="h3" {...data} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      recentPosts.length > 0 && (
+        <section id="recent-posts" class="pt-12 pb-6">
+          <h2 class="text-2xl font-semibold tracking-wide">
+            {t.home.recentPosts}
+          </h2>
+          <ul>
+            {recentPosts.slice(0, postsConfig.perIndex).map(data => (
+              <Card variant="h3" {...data} />
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <div class="my-8 text-center">
+      <LinkButton href={getRelativeLocaleUrl(locale, "posts")}>
+        {t.home.allPosts}
+        <IconArrowRight class="inline-block rtl:-rotate-180" />
+      </LinkButton>
+    </div>
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+      ?.dataset;
+    const baseRoot = import.meta.env.BASE_URL.replace(/\/?$/, "/");
+    if (indexLayout?.layout) {
+      sessionStorage.setItem("backUrl", indexLayout.homePath ?? baseRoot);
+    }
+  });
+</script>

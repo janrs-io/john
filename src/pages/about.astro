@@ -28,12 +28,12 @@ const capabilities = [
     ],
   },
   {
-    title: "Infrastructure, Cloud Native & Linux",
-    tags: ["Kubernetes HA", "etcd", "Calico", "Istio", "Linux / epoll", "Docker", "Coolify"],
+    title: "Infrastructure, Cloud Native & Self-Hosting",
+    tags: ["Kubernetes HA", "Istio", "Docker Compose", "Coolify", "pgvector", "Linux / epoll"],
     points: [
       "Bare-metal binary Kubernetes high-availability cluster architecture (control plane HA, etcd, Calico networking, CoreDNS, TLS bootstrap, and Istio service mesh).",
-      "Deep Linux systems foundation covering epoll / I/O multiplexing, TCP/network tuning, and containerized self-hosted operations.",
-      "Automated build, image optimization, and pre-deploy verification pipelines for zero-downtime delivery.",
+      "Multi-stack production self-hosting on Coolify & Docker Compose: isolated internal bridge networks (zero exposed DB/Redis ports), PostgreSQL 17 + pgvector, MariaDB, Redis, and automated Cloudflare R2 backups.",
+      "Deep Linux systems foundation covering epoll / I/O multiplexing, TCP/network tuning, and zero-downtime containerized delivery with Uptime Kuma & Umami observability.",
     ],
   },
   {
@@ -46,15 +46,29 @@ const capabilities = [
     ],
   },
   {
-    title: "Enterprise System Integration",
-    tags: ["ERP / CRM", "Webhooks", "IMAP", "OCR Pipelines", "S3 / R2 CDN"],
+    title: "Enterprise Integration & AI Workflows",
+    tags: ["ERP / CRM", "Dify", "n8n", "Gotenberg", "Webhooks", "S3 / R2 CDN"],
     points: [
-      "End-to-end integration across ERP/CRM platforms with transactional multi-table sync and idempotent API design.",
-      "Omnichannel messaging and email (IMAP) ingestion with isolated storage and edge anti-abuse gateways.",
-      "High-accuracy local document/PDF rendering and OCR data extraction pipelines.",
+      "End-to-end integration across ERP/CRM platforms (ERPNext, Chatwoot, Directus, Outline, Kutt) with transactional multi-table sync and idempotent API design.",
+      "Self-hosted AI & workflow automation pipelines using Dify, n8n, pgvector, and custom-patched Next.js/Docker builds.",
+      "Omnichannel messaging, IMAP email ingestion, Gotenberg PDF generation, and high-accuracy OCR data extraction pipelines.",
     ],
   },
 ];
+
+const profileStructuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  inLanguage: "en-US",
+  mainEntity: {
+    "@type": "Person",
+    name: config.site.author,
+    url: `${config.site.url}about/`,
+    jobTitle: "Senior Software Engineer & Junior Architect",
+    description: about.data.description ?? config.site.description,
+    sameAs: config.socials.map(s => s.url),
+  },
+}).replace(/</g, "\\u003c");
 ---
 
 <Layout
@@ -63,6 +77,13 @@ const capabilities = [
   ogImage={about.data.ogImage}
   canonicalURL={about.data.canonicalURL}
 >
+  <Fragment slot="head">
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={profileStructuredData}
+    />
+  </Fragment>
   <Header />
 
   <Breadcrumb />
@@ -76,7 +97,7 @@ const capabilities = [
         </p>
 
         <p class="text-foreground/95 text-base leading-relaxed sm:text-lg">
-          Hi, I&apos;m <strong>John</strong>. Over the past decade, I have designed,
+          Hi, I&apos;m <strong>John Yang</strong>. Over the past decade, I have designed,
           built, and operated production software ranging from low-level Linux
           and bare-metal Kubernetes clusters to high-concurrency Go backends and
           global edge web platforms.
@@ -129,7 +150,7 @@ const capabilities = [
             class="max-h-[460px] w-full rounded-xl object-cover object-top"
           />
           <p class="text-muted-foreground mt-2.5 text-center text-xs tracking-wide">
-            John · Senior Software Engineer &amp; Junior Architect
+            John Yang · Senior Software Engineer &amp; Junior Architect
           </p>
         </div>
       </aside>

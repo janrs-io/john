@@ -3,10 +3,10 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     url: "https://john.janrs.com/",
-    title: "John",
+    title: "John Yang",
     description:
       "10+ Years Senior Software Engineer & Junior Architect — Go, Kubernetes, Linux, Next.js/Astro, PostgreSQL, and Cloudflare Edge.",
-    author: "John",
+    author: "John Yang",
     profile: "https://john.janrs.com/about",
     ogImage: "default-og.jpg",
     lang: "en",

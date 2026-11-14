@@ -3,7 +3,7 @@ title: "About"
 description: "10+ Years Senior Software Engineer & Junior Architect — Go, Kubernetes, Linux, Next.js/Astro, PostgreSQL, and Cloudflare Edge."
 ---
 
-Hi, I'm **John** — a **Senior Software Engineer & Junior Architect** with **10+ years** of hands-on experience designing, building, and operating reliable backend systems, cloud-native infrastructure, and modern full-stack web platforms.
+Hi, I'm **John Yang** — a **Senior Software Engineer & Junior Architect** with **10+ years** of hands-on experience designing, building, and operating reliable backend systems, cloud-native infrastructure, and modern full-stack web platforms.
 
 ## Core Capabilities
 

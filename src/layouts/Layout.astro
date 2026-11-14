@@ -11,6 +11,10 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  ogType?: "website" | "article";
+  noindex?: boolean;
+  robotsContent?: string;
+  includeHreflang?: boolean;
 };
 
 const { site } = config;
@@ -20,10 +24,29 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  ogType = "website",
+  noindex = false,
+  robotsContent,
+  includeHreflang = !noindex,
 } = Astro.props;
 
+const currentLocale = Astro.currentLocale ?? site.lang;
+const ogLocale = currentLocale === "zh" ? "zh_CN" : "en_US";
+const ogAlternateLocale = currentLocale === "zh" ? "en_US" : "zh_CN";
+
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
-const rssHref = getAssetPath("rss.xml");
+const rssHref =
+  currentLocale === "zh" ? getAssetPath("zh/rss.xml") : getAssetPath("rss.xml");
+const rssTitle =
+  currentLocale === "zh" ? `${site.title} (中文 RSS)` : `${site.title} (RSS)`;
+
+const enPathname =
+  Astro.url.pathname === "/zh" || Astro.url.pathname === "/zh/"
+    ? "/"
+    : Astro.url.pathname.replace(/^\/zh(?=\/)/, "") || "/";
+const zhPathname = enPathname === "/" ? "/zh/" : `/zh${enPathname}`;
+const enAlternateURL = Astro.site ? new URL(enPathname, Astro.site).href : null;
+const zhAlternateURL = Astro.site ? new URL(zhPathname, Astro.site).href : null;
 ---
 
 <!doctype html>
@@ -36,9 +59,22 @@ const rssHref = getAssetPath("rss.xml");
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href={getAssetPath("favicon.svg")} />
-    <link rel="icon" href={getAssetPath("favicon.ico")} />
-    <link rel="canonical" href={canonicalURL} />
+    {!noindex && <link rel="canonical" href={canonicalURL} />}
+    {
+      includeHreflang && enAlternateURL && zhAlternateURL && (
+        <>
+          <link rel="alternate" hreflang="en" href={enAlternateURL} />
+          <link rel="alternate" hreflang="zh" href={zhAlternateURL} />
+          <link rel="alternate" hreflang="x-default" href={enAlternateURL} />
+        </>
+      )
+    }
     <meta name="generator" content={Astro.generator} />
+    {
+      noindex && (
+        <meta name="robots" content={robotsContent ?? "noindex, follow"} />
+      )
+    }
 
     <!-- Font -->
     <Font
@@ -54,7 +90,9 @@ const rssHref = getAssetPath("rss.xml");
     <link rel="sitemap" href={getAssetPath("sitemap-index.xml")} />
 
     <!-- Open Graph -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogAlternateLocale} />
     <meta property="og:site_name" content={site.title} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -62,17 +100,17 @@ const rssHref = getAssetPath("rss.xml");
     <meta property="og:image" content={socialImageURL} />
 
     <!-- Twitter / X -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={socialImageURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalURL} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageURL} />
 
     <!-- RSS autodiscovery -->
     <link
       rel="alternate"
       type="application/rss+xml"
-      title={site.title}
+      title={rssTitle}
       href={new URL(rssHref, Astro.site)}
     />
 

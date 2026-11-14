@@ -3,32 +3,73 @@
 @layer base {
   /* ===== Override default Tailwind Typography styles ===== */
   .app-prose {
-    @apply prose;
+    @apply prose max-w-none;
+
+    & > :first-child {
+      @apply mt-0;
+    }
 
     h1,
     h2,
     h3,
     h4,
     th {
-      @apply text-foreground mb-3;
+      @apply text-foreground tracking-tight;
+    }
+
+    h1 {
+      @apply border-accent mt-10 mb-5 border-l-4 pl-3.5 text-xl font-bold sm:text-2xl;
+    }
+
+    h2 {
+      @apply border-border/80 mt-9 mb-4 border-b pb-2 text-lg font-bold sm:text-xl;
     }
 
     h3 {
-      @apply italic;
+      @apply text-accent mt-6 mb-2.5 text-base font-semibold sm:text-[1.05rem];
+    }
+
+    h4 {
+      @apply mt-5 mb-2 text-[15.5px] font-semibold;
     }
 
     p,
-    strong,
     ol,
-    ul,
+    ul {
+      @apply text-[15.5px] leading-[1.85];
+      color: #3f3f46;
+    }
+
+    html[data-theme="dark"] & p,
+    html[data-theme="dark"] & ol,
+    html[data-theme="dark"] & ul {
+      color: #d4d4d8;
+    }
+
+    blockquote {
+      @apply border-accent/60 bg-muted/35 rounded-r-lg border-l-4 px-4 py-2 not-italic;
+      color: #52525b;
+    }
+
+    html[data-theme="dark"] & blockquote {
+      color: #a1a1aa;
+    }
+
+    strong {
+      @apply text-foreground font-semibold;
+    }
+
     figcaption,
-    table,
-    code {
-      @apply text-foreground;
+    table {
+      @apply text-foreground/85;
+    }
+
+    pre {
+      @apply border-border/80 my-6 rounded-xl border shadow-xs;
     }
 
     a {
-      @apply text-foreground hover:text-accent wrap-break-word decoration-dashed underline-offset-4 focus-visible:no-underline;
+      @apply text-accent hover:opacity-80 wrap-break-word underline decoration-dashed underline-offset-4 focus-visible:no-underline;
     }
 
     ul {
@@ -40,11 +81,11 @@
     }
 
     hr {
-      @apply border-border;
+      @apply border-border my-8;
     }
 
     img {
-      @apply border-border mx-auto border;
+      @apply border-border mx-auto my-6 rounded-xl border shadow-sm;
     }
 
     img[role="button"] {
@@ -94,15 +135,21 @@
     }
 
     code {
-      @apply bg-muted/75 text-foreground rounded p-1 wrap-break-word before:content-none after:content-none;
+      @apply bg-muted/80 rounded px-1.5 py-0.5 text-[0.9em] font-medium wrap-break-word before:content-none after:content-none;
+      color: #881337;
+    }
+
+    html[data-theme="dark"] & code {
+      color: #fda4af;
     }
 
     .astro-code code {
       @apply flex-[1_0_100%] bg-inherit p-0;
+      color: inherit;
     }
 
     blockquote {
-      @apply border-s-accent/80 wrap-break-word opacity-80;
+      @apply border-s-accent/80 wrap-break-word;
     }
 
     details:not(.callout) {

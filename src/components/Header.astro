@@ -27,6 +27,18 @@ const pathWithoutTrailingSlash =
 
 const currentPath = stripLocale(pathWithoutTrailingSlash, locale);
 
+const targetLocale = locale === "zh" ? "en" : "zh";
+const switchTargetPath =
+  currentPath.startsWith("/posts/")
+    ? "posts"
+    : currentPath.startsWith("/tags/")
+      ? "tags"
+      : currentPath === "/"
+        ? ""
+        : currentPath.replace(/^\//, "");
+const langSwitchHref = getRelativeLocaleUrl(targetLocale, switchTargetPath);
+const langSwitchLabel = locale === "zh" ? "EN" : "中文";
+
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
@@ -52,7 +64,7 @@ const isActive = (path: string) => {
       href={getRelativeLocaleUrl(locale, "")}
       class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
-      {site.title}
+      {locale === "zh" ? "杨建勇" : site.title}
     </a>
     <nav
       id="nav-menu"
@@ -143,6 +155,15 @@ const isActive = (path: string) => {
             </li>
           )
         }
+        <li class="col-span-1 flex items-center justify-center">
+          <a
+            href={langSwitchHref}
+            class="focus-outline border-border hover:border-accent hover:text-accent rounded-md border px-2 py-0.5 text-xs font-semibold tracking-wide transition"
+            title={locale === "zh" ? "Switch to English" : "切换至中文"}
+          >
+            {langSwitchLabel}
+          </a>
+        </li>
         {
           features.lightAndDarkMode && (
             <li class="col-span-1 flex items-center justify-center">

@@ -19,7 +19,7 @@ import config from "@/config";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
-  const sortedPosts = getSortedPosts(posts);
+  const sortedPosts = getSortedPosts(posts, "en");
 
   return sortedPosts.map((post, index) => ({
     params: { slug: getPostSlug(post.id, post.filePath) },
@@ -77,6 +77,11 @@ const {
 
 const { Content, headings } = await render(post);
 const tocHeadings = config.features.toc && !hideToc ? headings : [];
+const showSideToc = tocHeadings.some(h => h.depth === 2 || h.depth === 3);
+
+// Estimate reading time (~220 words/min for EN, ~450 chars/min for CJK)
+const rawLen = (post.body ?? "").length;
+const readingMinutes = Math.max(1, Math.round(rawLen / 900));
 
 let ogImageUrl: string | undefined;
 
@@ -106,6 +111,8 @@ const ogImage = ogImageUrl
   canonicalURL={canonicalURL}
   pubDatetime={pubDatetime}
   modDatetime={modDatetime}
+  tags={tags}
+  locale={locale}
 >
   <Header />
 
@@ -116,39 +123,63 @@ const ogImage = ogImageUrl
     class:list={["app-layout", { "mt-8": !config.features.showBackButton }]}
     data-pagefind-body
   >
-    <h1
-      style={{ viewTransitionName: toTransitionName(post.id) }}
-      class="text-accent inline-block text-2xl font-bold sm:text-3xl"
-    >
-      {title}
-    </h1>
+    <header class="border-border border-b pb-6">
+      <div class="mb-3 flex flex-wrap gap-1.5">
+        {
+          tags.map(tag => (
+            <a
+              href={`/tags/${slugifyStr(tag)}/`}
+              class="border-border bg-muted/40 text-muted-foreground hover:border-accent/50 hover:text-accent rounded-md border px-2 py-0.5 text-xs font-medium transition"
+            >
+              #{tag}
+            </a>
+          ))
+        }
+      </div>
 
-    <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
-      <span
-        aria-hidden="true"
-        class:list={[
-          "text-muted-foreground max-sm:hidden",
-          { hidden: !config.features.editPost?.enabled || hideEditPost },
-        ]}
+      <h1
+        style={{ viewTransitionName: toTransitionName(post.id) }}
+        class="text-foreground text-2xl font-bold leading-tight tracking-tight sm:text-4xl"
       >
-        |
-      </span>
-      <EditPost {hideEditPost} {post} class="max-sm:hidden" />
-    </div>
+        {title}
+      </h1>
 
-    <div class="post-body mt-8">
-      <PostToc headings={tocHeadings} />
+      <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+        <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+        <span aria-hidden="true">·</span>
+        <span>{readingMinutes} min read</span>
+        <span
+          aria-hidden="true"
+          class:list={[
+            "text-muted-foreground max-sm:hidden",
+            { hidden: !config.features.editPost?.enabled || hideEditPost },
+          ]}
+        >
+          |
+        </span>
+        <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+      </div>
+    </header>
+
+    <div
+      class:list={[
+        "post-body mt-8",
+        showSideToc
+          ? "lg:grid lg:grid-cols-[minmax(0,1fr)_250px] lg:items-start lg:gap-10"
+          : "",
+      ]}
+    >
       <article
         id="article"
         class:list={[
-          "w-full",
-          "app-prose max-w-app",
+          "w-full rounded-2xl border border-border bg-white/95 p-6 shadow-xs sm:p-9 dark:bg-muted/20",
+          "app-prose max-w-none",
           "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
         ]}
       >
         <Content />
       </article>
+      {showSideToc && <PostToc headings={tocHeadings} />}
     </div>
 
     <hr class="my-8 border-dashed" />

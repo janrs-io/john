@@ -9,20 +9,39 @@ type Props = {
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  tags?: string[];
+  locale?: string;
 };
 
 const { site } = config;
 
-const { title, description, ogImage, canonicalURL, pubDatetime, modDatetime } =
-  Astro.props;
+const {
+  title,
+  description,
+  ogImage,
+  canonicalURL,
+  pubDatetime,
+  modDatetime,
+  tags = [],
+  locale = Astro.currentLocale ?? site.lang,
+} = Astro.props;
+
+const pageUrl = canonicalURL ?? new URL(Astro.url.pathname, Astro.site).href;
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   headline: title ?? site.title,
+  ...(description && { description }),
   image: ogImage,
+  inLanguage: locale === "zh" ? "zh-CN" : "en-US",
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": pageUrl,
+  },
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+  ...(tags.length > 0 && { keywords: tags.join(", ") }),
   author: [
     {
       "@type": "Person",
@@ -30,6 +49,11 @@ const structuredData = {
       ...(site.profile && { url: site.profile }),
     },
   ],
+  publisher: {
+    "@type": "Person",
+    name: site.author,
+    ...(site.profile && { url: site.profile }),
+  },
 };
 
 // JSON.stringify leaves `<` alone, so a title containing `</script>` would
@@ -40,11 +64,9 @@ const structuredDataJson = JSON.stringify(structuredData).replace(
 );
 ---
 
-<Layout {title} {description} {ogImage} {canonicalURL}>
+<Layout {title} {description} {ogImage} {canonicalURL} ogType="article">
   <Fragment slot="head">
-    <!-- Override og:type for article pages -->
-    <meta property="og:type" content="article" />
-
+    <meta property="article:author" content={site.author} />
     {
       pubDatetime && (
         <meta
@@ -61,6 +83,7 @@ const structuredDataJson = JSON.stringify(structuredData).replace(
         />
       )
     }
+    {tags.map(tag => <meta property="article:tag" content={tag} />)}
 
     <script
       type="application/ld+json"

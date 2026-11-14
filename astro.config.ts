@@ -27,13 +27,27 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap({
-      filter: page =>
-        config.features?.showArchives !== false || !/\/archives\/?$/.test(page),
+      i18n: {
+        defaultLocale: "en",
+        locales: {
+          en: "en-US",
+          zh: "zh-CN",
+        },
+      },
+      filter: page => {
+        if (config.features?.showArchives === false && /\/archives\/?$/.test(page)) {
+          return false;
+        }
+        if (/\/(404|search)(\/|$)/.test(page)) {
+          return false;
+        }
+        return true;
+      },
     }),
     inlineTocDeprecation(),
   ],
   i18n: {
-    locales: ["en"],
+    locales: ["en", "zh"],
     defaultLocale: "en",
     routing: {
       prefixDefaultLocale: false,
