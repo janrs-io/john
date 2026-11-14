@@ -24,7 +24,6 @@ export default defineAstroPaperConfig({
     showBackButton: true,
     editPost: {
       enabled: false,
-      url: "https://github.com/janrs-io/john/edit/master/",
     },
     search: "pagefind",
     toc: true,
