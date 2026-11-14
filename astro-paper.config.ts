@@ -5,7 +5,7 @@ export default defineAstroPaperConfig({
     url: "https://john.janrs.com/",
     title: "John",
     description:
-      "Backend & Infrastructure Architect — Notes on Go, Kubernetes, Linux, Docker, and Full-Stack Engineering.",
+      "10+ Years Senior Software Engineer & Junior Architect — Go, Kubernetes, Linux, Next.js/Astro, PostgreSQL, and Cloudflare Edge.",
     author: "John",
     profile: "https://john.janrs.com/about",
     ogImage: "default-og.jpg",
