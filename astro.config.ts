@@ -24,6 +24,9 @@ import config from "./astro-paper.config";
 
 export default defineConfig({
   site: config.site.url,
+  server: {
+    allowedHosts: ["debian.mshome.net", "localhost", "127.0.0.1"],
+  },
   integrations: [
     mdx(),
     sitemap({
