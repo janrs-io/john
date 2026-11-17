@@ -8,6 +8,7 @@ export default defineAstroPaperConfig({
       "10+ Years Senior Software Engineer & Junior Architect — Go, Kubernetes, Linux, Next.js/Astro, PostgreSQL, and Cloudflare Edge.",
     author: "John Yang",
     profile: "https://john.janrs.com/about",
+    googleVerification: "google46bacab397626407",
     ogImage: "default-og.jpg",
     lang: "en",
     timezone: "Asia/Shanghai",
