@@ -26,7 +26,7 @@ export default defineConfig({
   site: config.site.url,
   trailingSlash: "always",
   server: {
-    allowedHosts: ["debian.mshome.net", "localhost", "127.0.0.1"],
+    allowedHosts: ["debian.mshome.net", "john.blog.test", "localhost", "127.0.0.1"],
   },
   integrations: [
     mdx(),
