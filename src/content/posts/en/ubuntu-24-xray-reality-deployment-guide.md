@@ -12,9 +12,9 @@ tags:
 description: "Step-by-step guide to deploying Xray VLESS-Reality on Ubuntu 24.04 with Google BBR congestion control, SSH key-only hardening, Fail2ban/UFW protection, and domain-less TLS camouflage."
 ---
 
-> **Important Disclaimer**: This tutorial is provided strictly for **network protocol research, Linux administration learning, and technical exchange**. Please comply with all applicable local laws and regulations (including the Cybersecurity Law of the People's Republic of China). **Commercial use or any illegal activity is strictly prohibited.**
+> **Important Disclaimer & Compliance Notice**: This tutorial is provided strictly for **network protocol research, Linux administration learning, and technical exchange**. Please comply with all applicable local laws and regulations (including the Cybersecurity Law of the People's Republic of China where applicable) as well as the Terms of Service of your cloud and network providers. **Commercial use, unauthorized network access, proxy redistribution, or any illegal activity is strictly prohibited.**
 
-When learning Linux server administration and cross-border network architecture, balancing **host security (anti-brute-force)**, **throughput speed (low latency)**, and **protocol stealth (resisting active probing)** is a classic engineering challenge.
+When learning Linux server administration and network architecture, balancing **host security (anti-brute-force)**, **throughput speed (low latency)**, and **transport security (resisting active probing)** is a classic engineering challenge.
 
 This step-by-step, sanitized guide walks through deploying **VLESS + XTLS-Vision + Reality** on a fresh **Ubuntu 24.04** server.
 
@@ -242,15 +242,15 @@ systemctl status xray
 
 ## 6. Step 5: Client Connection & Routing
 
-In your local client (e.g., v2rayN or Clash Verge), import the following VLESS-Reality URI after substituting your own values:
+In a compatible local VLESS-Reality client, import the following VLESS-Reality URI after substituting your own values:
 
 ```text
 vless://<YOUR_UUID>@<SERVER_IP>:<XRAY_PORT>?security=reality&encryption=none&pbk=<YOUR_PUBLIC_KEY>&headerType=none&type=tcp&flow=xtls-rprx-vision&sni=www.microsoft.com&sid=<YOUR_SHORT_ID>&fp=chrome#My-Reality-Node
 ```
 
 ### Recommended Client Settings
-1. **Routing Mode**: Use **`Bypass Mainland / Rule`** so domestic traffic connects directly without unnecessary hops.
-2. **TUN Mode**: Enable **TUN mode** if you want CLI tools (`git`, `curl`, `docker`) to route through the proxy seamlessly.
+1. **Routing Mode**: Use **`Rule Mode`** so local/direct traffic connects directly without unnecessary hops, and only designated development or research traffic traverses the encrypted tunnel.
+2. **TUN Mode**: Enable **TUN mode** if you want CLI tools (`git`, `curl`, `docker`) to route according to your configured rules.
 
 ---
 

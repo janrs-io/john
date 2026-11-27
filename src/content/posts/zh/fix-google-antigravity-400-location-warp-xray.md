@@ -1,5 +1,5 @@
 ---
-title: "基于 Cloudflare WARP 与 Xray 解决 Google AI 服务（Antigravity / Gemini / AI Studio / NotebookLM）地区限制完整方案"
+title: "基于 Cloudflare WARP 与 Xray 解决 Google AI 服务（Antigravity / Gemini / AI Studio / NotebookLM）机房 IP 误拦截方案"
 author: "John Yang"
 lang: zh
 pubDatetime: 2026-11-17T10:00:00Z
@@ -10,10 +10,12 @@ tags:
   - Networking
   - Security
   - Architecture
-description: "一套完整的 Google AI 服务地区限制解决方案：通过 Cloudflare WARP 本地代理配合 Xray SNI 嗅探与分流，统一解决 Google Antigravity (HTTP 400)、Gemini、AI Studio 与 NotebookLM 的机房/ISP IP 拦截问题，并附账号锁区与支付资料排查指南。"
+description: "一套基于 Cloudflare WARP 本地出口与 Xray SNI 嗅探分流的工程方案：用于解决具备合法使用资质的开发者在受支持地区因机房/ISP IP 归属导致的 Google Antigravity (HTTP 400)、Gemini、AI Studio 与 NotebookLM 误拦截问题，并附账号地区核对与支付资料排查指南。"
 ---
 
-在使用 Google Antigravity（调用 Gemini 模型）、Gemini 网页版、Google AI Studio 或 NotebookLM 等服务时，很多开发者即使已经将 Google 账号地区设为美国（US），且 VPS 节点的公网 IP 也显示为美国，依然会频繁遭遇地区拦截：
+> **免责声明与合规提示**：本文仅用于**网络路由架构、SNI 流量分流及云原生网络出口排查的技术研究与学习交流**。请严格遵守所在国家/地区的法律法规（包括《中华人民共和国网络安全法》及相关规定）以及 Google、Cloudflare 等相关服务商的服务条款（Terms of Service）。**严禁将本文内容用于任何商业用途、未授权代理分发、批量账号注册或任何违反法律法规及平台政策的行为**；账号地区核对请务必基于真实常驻情况如实操作，切勿提交虚假信息。
+
+在使用 Google Antigravity（调用 Gemini 模型）、Gemini 网页版、Google AI Studio 或 NotebookLM 等服务时，很多处于受支持地区的开发者即使已经将 Google 账号地区设为美国（US），且服务器公网 IP 也位于美国，依然可能遭遇机房 IP 误拦截：
 
 - **Google Antigravity**：任务立即终止并报错：
   ```text
@@ -21,9 +23,9 @@ description: "一套完整的 Google AI 服务地区限制解决方案：通过 
   User location is not supported for the API use.
   status: FAILED_PRECONDITION
   ```
-- **Gemini / AI Studio / NotebookLM**：打开页面或登录后直接提示“当前所在国家/地区不支持使用该服务”，或者出现 `gemini.google.com` 能打开但 `aistudio.google.com`、`notebooklm.google.com` 依然被拒的情况。
+- **Gemini / AI Studio / NotebookLM**：打开页面或登录后提示“当前所在国家/地区不支持使用该服务”，或者出现 `gemini.google.com` 能打开但 `aistudio.google.com`、`notebooklm.google.com` 依然被拒的情况。
 
-本文将从网络出口、分流规则到 Google 账号与支付资料，给出一套**生产级、零全局污染的完整解决方案**：**利用 Cloudflare WARP 本地代理模式，配合 Xray 入站 SNI 嗅探与出站分流，统一解锁 Google AI 全家桶，并提供分流生效后的账号级排查路径。**
+本文将从网络出口、分流规则到 Google 账号与支付资料，给出一套**生产级、零全局污染的工程排查与分流方案**：**利用 Cloudflare WARP 本地代理模式，配合 Xray 入站 SNI 嗅探与出站分流，统一解决 Google AI 接口的机房 IP 误判问题，并提供账号级官方排查路径。**
 
 ---
 
@@ -37,7 +39,7 @@ Google 对旗下 AI 与云端开发接口实施了比普通网页更严格的风
 4. **账号归属地与隐藏支付资料**：Google 会同时校验网络出口和账号自身的关联国家、隐藏的 Google Payments 付款资料、年龄及 Workspace 策略。
 
 **为什么不建议整机全局开 WARP？**
-让 VPS 全局流量走 WARP 容易引发 SSH 路由冲突，还会导致所有出站流量共用 Cloudflare 出口 IP，增加日常服务风控与运维复杂度。**最优架构**是保持 VPS 默认网络不变，仅在 Xray 层将需要解锁的 Google 流量定向转发至本机 `127.0.0.1:40000` 的 WARP SOCKS5 代理。
+让 VPS 全局流量走 WARP 容易引发 SSH 路由冲突，还会导致所有出站流量共用 Cloudflare 出口 IP，增加日常服务风控与运维复杂度。**最优架构**是保持 VPS 默认网络不变，仅在 Xray 层将目标 Google 流量定向转发至本机 `127.0.0.1:40000` 的 WARP SOCKS5 代理。
 
 ---
 
@@ -46,7 +48,7 @@ Google 对旗下 AI 与云端开发接口实施了比普通网页更严格的风
 完整的数据流向如下：
 
 ```text
-客户端 (v2rayN / Clash TUN 模式)
+本地分流客户端 (TUN 模式)
         ↓ VLESS Reality (自定义端口)
 VPS:PORT
         ↓
@@ -154,7 +156,7 @@ cp -a /usr/local/etc/xray/config.json "/usr/local/etc/xray/config.json.bak.$(dat
 
 ### 5.1 启用入站域名嗅探 (`inbounds[].sniffing`)
 
-本地客户端（如 v2rayN / Clash）在本地完成 DNS 解析后，发往 VPS 的流量目的地址往往已经是 IP 而非域名。必须在入站节点开启 `sniffing`，让 Xray 从 TLS Client Hello 中还原 SNI 域名：
+本地分流客户端在本地完成 DNS 解析后，发往 VPS 的流量目的地址往往已经是 IP 而非域名。必须在入站节点开启 `sniffing`，让 Xray 从 TLS Client Hello 中还原 SNI 域名：
 
 ```json
 "sniffing": {
@@ -295,15 +297,14 @@ systemctl is-active xray warp-svc
 
 在无痕窗口、**不登录任何 Google 账号**的情况下直接打开 `https://aistudio.google.com/`、`https://gemini.google.com/` 或 `https://notebooklm.google.com/`：
 - **未登录时就报错**：说明仍有相关域名未走 WARP 或存在出口 IP 不一致，检查 Xray 配置是否已启用 `geosite:google` 及 `sniffing` 规则，并确认 `xray.service` 与 `warp-svc` 均为 `active`。
-- **未登录时能正常打开落地页，一登录就报错**：说明 **100% 是 Google 账号归属地或资格限制**，换任何 VPN/节点都无效，必须处理账号本身设置。
+- **未登录时能正常打开落地页，一登录就报错**：说明 **100% 是 Google 账号归属地或资格限制**，调整网络出口无法解决，需核对账号本身设置。
 
-### 7.2 检查并修改 Google 账号关联国家（官方渠道）
+### 7.2 检查并核对 Google 账号关联国家（官方渠道）
 
 1. **查看当前账号关联地区**：登录后访问 Google 服务条款页 [policies.google.com/terms](https://policies.google.com/terms)，拉至页面底部或条款正文查看当前关联的国家/地区。
-2. **提交官方改区申请**：
-   - 先保持代理连接在目标支持地区（如美国 US）；
-   - 打开官方国家/地区关联更改表单：[policies.google.com/country-association-form](https://policies.google.com/country-association-form)；
-   - 选择目标国家（如 `United States`），原因建议选择最后一项（`None of the above`），用英文说明因工作或学习需要访问 Gemini / AI Studio 并常驻该地区。提交后通常几小时到几天内会收到审核邮件。
+2. **提交官方改区申请（仅限实际常驻地区变更）**：
+   - 若你**确实常驻或迁居至受支持地区**，但账号仍错误关联在旧地区，可打开官方国家/地区关联更改表单：[policies.google.com/country-association-form](https://policies.google.com/country-association-form)；
+   - 请务必**如实选择实际常驻国家并填写真实理由**，切勿提交虚假信息或伪造所在地。提交后通常几小时到几天内会收到审核邮件。
 
 ### 7.3 检查隐藏的 Google Payments 支付资料冲突
 

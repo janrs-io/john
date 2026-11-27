@@ -1,5 +1,5 @@
 ---
-title: "Unlocking Google AI Services (Antigravity, Gemini, AI Studio, NotebookLM) via Cloudflare WARP and Xray Routing"
+title: "Resolving Google AI Datacenter IP Blocks (Antigravity, Gemini, AI Studio, NotebookLM) via Cloudflare WARP and Xray Routing"
 author: "John Yang"
 lang: en
 pubDatetime: 2026-11-17T10:00:00Z
@@ -10,10 +10,12 @@ tags:
   - Networking
   - Security
   - Architecture
-description: "A complete solution for Google AI region restrictions: use Cloudflare WARP local proxy with Xray SNI sniffing and targeted routing to unlock Google Antigravity (HTTP 400), Gemini, AI Studio, and NotebookLM, plus account country and Payments profile troubleshooting."
+description: "An engineering guide for resolving datacenter/ISP IP false-positive blocks on Google Antigravity (HTTP 400), Gemini, AI Studio, and NotebookLM using Cloudflare WARP local egress and Xray SNI routing, plus official account and Payments profile diagnostics."
 ---
 
-When using Google Antigravity (with Gemini models), Gemini Web, Google AI Studio, or NotebookLM, developers often hit region blocks even when their Google account is set to the United States (`loc=US`) and their VPS public IP geolocates to the US:
+> **Disclaimer & Compliance Notice**: This article is provided strictly for **technical research and educational purposes regarding network routing, SNI-based traffic steering, and cloud egress diagnostics**. Please comply with all applicable local laws and regulations (including the Cybersecurity Law of the People's Republic of China where applicable) as well as the Terms of Service of Google, Cloudflare, and other relevant providers. **Commercial use, unauthorized proxy redistribution, bulk account abuse, or any activity that violates applicable laws or platform policies is strictly prohibited.** Do not falsify residency details; only use official account settings based on your actual, legitimate location and eligibility.
+
+When using Google Antigravity (with Gemini models), Gemini Web, Google AI Studio, or NotebookLM, developers in supported regions often hit false-positive location blocks when routing through cloud or VPS infrastructure, even when their Google account and server IP are in the United States (`loc=US`):
 
 - **Google Antigravity**: Requests fail immediately with:
   ```text
@@ -23,7 +25,7 @@ When using Google Antigravity (with Gemini models), Gemini Web, Google AI Studio
   ```
 - **Gemini / AI Studio / NotebookLM**: Pages or signed-in sessions display "region not supported," or `gemini.google.com` works while `aistudio.google.com` and `notebooklm.google.com` remain blocked.
 
-This guide presents a **production-grade, zero-global-pollution solution** covering network egress, Xray domain routing, and Google account/payment diagnostics: **pair Cloudflare WARP in local proxy mode with Xray inbound SNI sniffing and outbound routing to unlock the Google AI suite cleanly.**
+This guide presents a **production-grade, zero-global-pollution diagnostic and routing architecture** covering network egress, Xray domain routing, and official Google account/payment checks: **pair Cloudflare WARP in local proxy mode with Xray inbound SNI sniffing and outbound routing to eliminate datacenter IP mismatches cleanly.**
 
 ---
 
@@ -44,7 +46,7 @@ Routing the entire VPS through WARP can disrupt SSH management routes and forces
 ## 2. End-to-End Network Topology
 
 ```text
-Local Client (v2rayN / Clash TUN mode)
+Local Routing Client (TUN mode)
         ↓ VLESS Reality (Custom Port)
 VPS Server (Dedicated Inbound Port)
         ↓
@@ -293,15 +295,14 @@ If an **incognito window** still shows "region not supported" after routing is v
 
 Open `https://aistudio.google.com/`, `https://gemini.google.com/`, or `https://notebooklm.google.com/` in an **incognito window without signing in**:
 - **Blocked while signed out**: A related domain is still bypassing WARP or hitting an IP-consistency check. Verify `geosite:google` and `sniffing` are active, and confirm both `xray` and `warp-svc` are `active`.
-- **Loads fine signed out, blocked immediately after sign-in**: This is **100% an account region or eligibility restriction**. Switching VPNs will not fix it; update the account settings below.
+- **Loads fine signed out, blocked immediately after sign-in**: This is **100% an account region or eligibility restriction**. Changing network egress will not fix it; audit the account settings below.
 
-### 7.2 Check and Update Google Account Country Association
+### 7.2 Check and Update Google Account Country Association (Official Channel)
 
 1. **Check current region**: Sign in and visit [policies.google.com/terms](https://policies.google.com/terms), then scroll to check the country/region currently associated with your account.
-2. **Submit an official change request**:
-   - Keep your proxy/VPN connected to the target supported region (e.g., United States).
-   - Open the [Google Country Association Form](https://policies.google.com/country-association-form).
-   - Select the target country (e.g., `United States`), choose `None of the above`, and explain in English that you need access to Gemini / AI Studio for work or study while residing in that region. Decisions usually arrive by email within a few hours to a few days.
+2. **Submit an official change request (only for actual residency changes)**:
+   - If you **legitimately reside in or have relocated to a supported region** while your account remains tied to a previous region, open the [Google Country Association Form](https://policies.google.com/country-association-form).
+   - Select your **actual country of residence** and provide truthful details—never submit false residency claims. Decisions usually arrive by email within a few hours to a few days.
 
 ### 7.3 Audit Hidden Google Payments Profiles
 
