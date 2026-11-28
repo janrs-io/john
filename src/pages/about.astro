@@ -65,6 +65,7 @@ const profileStructuredData = JSON.stringify({
     name: config.site.author,
     url: `${config.site.url}about/`,
     jobTitle: "Senior Software Engineer & Junior Architect",
+    email: "john.yang86868@gmail.com",
     description: about.data.description ?? config.site.description,
     sameAs: config.socials.map(s => s.url),
   },
@@ -138,6 +139,12 @@ const profileStructuredData = JSON.stringify({
             class="border-border bg-muted/60 hover:border-accent/50 inline-flex items-center rounded-lg border px-5 py-2.5 text-sm font-medium transition"
           >
             GitHub (@janrs-io)
+          </a>
+          <a
+            href="mailto:john.yang86868@gmail.com"
+            class="border-border bg-muted/60 hover:border-accent/50 inline-flex items-center rounded-lg border px-5 py-2.5 text-sm font-medium transition"
+          >
+            Email
           </a>
         </div>
       </div>
@@ -213,6 +220,13 @@ const profileStructuredData = JSON.stringify({
             class="text-accent font-medium underline underline-offset-4"
           >
             github.com/janrs-io
+          </a>{" "}
+          or reach out via email at{" "}
+          <a
+            href="mailto:john.yang86868@gmail.com"
+            class="text-accent font-medium underline underline-offset-4"
+          >
+            john.yang86868@gmail.com
           </a>
           .
         </p>

@@ -59,6 +59,7 @@ const zhProfileStructuredData = JSON.stringify({
     name: "杨建勇 (John Yang)",
     url: `${config.site.url}zh/about/`,
     jobTitle: "高级软件工程师 · 系统架构师",
+    email: "john.yang86868@gmail.com",
     description: zhAboutDesc,
     sameAs: config.socials.map(s => s.url),
   },
@@ -162,7 +163,23 @@ const zhProfileStructuredData = JSON.stringify({
     <section class="border-border bg-muted/40 rounded-2xl border p-6 sm:p-8">
       <h2 class="text-xl font-bold tracking-tight">交流与合作</h2>
       <p class="text-muted-foreground mt-2 max-w-2xl text-sm leading-relaxed sm:text-base">
-        欢迎围绕 Go 高并发系统、Kubernetes / Istio 架构、现代全栈与边缘平台工程进行技术交流。你可以通过主页或顶部导航的 GitHub 链接找到我，也可以在文章归档中查阅我的过往技术笔记。
+        欢迎围绕 Go 高并发系统、Kubernetes / Istio 架构、现代全栈与边缘平台工程进行技术交流。你可以通过{" "}
+        <a
+          href="https://github.com/janrs-io"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-accent font-medium underline underline-offset-4"
+        >
+          GitHub
+        </a>{" "}
+        找到我，或发送邮件至{" "}
+        <a
+          href="mailto:john.yang86868@gmail.com"
+          class="text-accent font-medium underline underline-offset-4"
+        >
+          john.yang86868@gmail.com
+        </a>
+        。
       </p>
     </section>
   </Main>

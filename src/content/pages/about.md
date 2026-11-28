@@ -28,3 +28,4 @@ This site (`john.janrs.com`) is where I publish practical engineering guides, ba
 ## Connect
 
 - **GitHub**: [github.com/janrs-io](https://github.com/janrs-io)
+- **Email**: [john.yang86868@gmail.com](mailto:john.yang86868@gmail.com)
