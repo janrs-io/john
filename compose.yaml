@@ -1,21 +1,26 @@
+# /opt/stacks/john/compose.yaml
 services:
-  app:
+  john-web:
     image: ghcr.io/pnpm/pnpm:11.3.0
-    ports:
-      - 4321:4321
+    container_name: john-web
+    restart: unless-stopped
     working_dir: /app
+    ports:
+      - "4321:4321"
     command: >
       bash -c "
-      pnpm runtime set node 24 -g
-      && pnpm install --frozen-lockfile
-      && pnpm prune
-      && pnpm run dev --host 0.0.0.0"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4321"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 60s
+      ([ -x /root/.local/share/pnpm/nodejs/24*/bin/node ] || pnpm runtime set node 24 -g)
+      && ([ -x /app/node_modules/.bin/astro ] || (pnpm install && pnpm prune))
+      && /app/node_modules/.bin/astro dev --host 0.0.0.0"
     volumes:
       - ./:/app
-      - /app/node_modules
+      - john_node_modules:/app/node_modules
+    networks:
+      - dev-proxy
+
+volumes:
+  john_node_modules:
+
+networks:
+  dev-proxy:
+    external: true
